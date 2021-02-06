@@ -1,4 +1,4 @@
-const staticCacheName = 'site-static-v3';
+const staticCacheName = 'site-static-v1';
 const dynamicCacheName = 'site-dynamic-v3';
 
 const assets = [
@@ -62,8 +62,8 @@ self.addEventListener('fetch', (e) => {
     // let response = cache || fetch(e.request);
     // e.respondWith(await response);
     if (!(e.request.url.indexOf('http') === 0)) return; // skip the request. if request is not made with http protocol
-
-    e.respondWith(
+    if (e.request.url.indexOf('firestore.googleapis.com') === -1){
+            e.respondWith(
         caches.match(e.request).then((response) => {
             return response || fetch(e.request).then(fetchRes => {
                 return caches.open(dynamicCacheName).then(cache => {
@@ -78,5 +78,7 @@ self.addEventListener('fetch', (e) => {
             }
         })
     );
+
+    } ;
 
 });
